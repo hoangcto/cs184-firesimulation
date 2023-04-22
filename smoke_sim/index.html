@@ -10,7 +10,7 @@
     </style>
   </head>
   <body>
-    <script id="Advect" type="shader-code">
+    <script id="Advect" type="x-shader/x-fragment">
         precision mediump float;
         uniform vec2 res;//The width and height of our screen
         uniform sampler2D velocityField;//Our input texture
@@ -46,7 +46,7 @@
             gl_FragColor = vec4(dissipation * bilerp(advectionField, p), 0.0, 1.0);
         }
     </script>
-    <script id="ExternalVelocity" type="shader-code">
+    <script id="ExternalVelocity" type="x-shader/x-fragment">
         uniform vec2 res;//The width and height of our screen
         uniform sampler2D bufferTexture;//Our input texture
         uniform vec3 smokeSource;//The x,y are the posiiton. The z is the power/density
@@ -60,7 +60,7 @@
             gl_FragColor = vec4(texture2D(bufferTexture, pixel).xy + smoke, 0.0, 1.0);
         }
     </script>
-    <script id="ExternalTemperature" type="shader-code">
+    <script id="ExternalTemperature" type="x-shader/x-fragment">
         uniform vec2 res;//The width and height of our screen
         uniform sampler2D bufferTexture;//Our input texture
         uniform vec3 smokeSource;//The x,y are the posiiton. The z is the power/density
@@ -74,7 +74,7 @@
             gl_FragColor = vec4(texture2D(bufferTexture, pixel).x + smoke, 0.0, 0.0, 1.0);
         }
     </script>
-    <script id="ExternalDensity" type="shader-code">
+    <script id="ExternalDensity" type="x-shader/x-fragment">
         uniform vec2 res;//The width and height of our screen
         uniform sampler2D bufferTexture;//Our input texture
         uniform vec3 smokeSource;//The x,y are the posiiton. The z is the power/density
@@ -88,7 +88,7 @@
             gl_FragColor = vec4(texture2D(bufferTexture, pixel).xyz + smoke, 1.0);
         }
     </script>
-    <script id="Draw" type="shader-code">
+    <script id="Draw" type="x-shader/x-fragment">
         precision mediump float;
         uniform vec2 res;
         uniform sampler2D bufferTexture;
@@ -100,7 +100,7 @@
             gl_FragColor = vec4(bias + scale * texture2D(bufferTexture, pixel).xyz, 1.0);
         }
     </script>
-    <script id="Jacobi" type="shader-code">
+    <script id="Jacobi" type="x-shader/x-fragment">
         uniform vec2 res;
         uniform sampler2D x;
         uniform sampler2D b;
@@ -117,7 +117,7 @@
 
         }
     </script>
-    <script id="Divergence" type="shader-code">
+    <script id="Divergence" type="x-shader/x-fragment">
         uniform vec2 res;
         uniform sampler2D u;
         uniform float dx;
@@ -135,7 +135,7 @@
 
         }
     </script>
-    <script id="SubtractGradient" type="shader-code">
+    <script id="SubtractGradient" type="x-shader/x-fragment">
         uniform vec2 res;
         uniform sampler2D w;
         uniform sampler2D p;
@@ -153,7 +153,7 @@
 
         }
     </script>
-    <script id="Buoyancy" type="shader-code">
+    <script id="Buoyancy" type="x-shader/x-fragment">
         uniform vec2 res;
         uniform sampler2D velocityField;
         uniform sampler2D temperatureField;
@@ -177,7 +177,7 @@
 
         }
     </script>
-    <script id="Curl" type="shader-code">
+    <script id="Curl" type="x-shader/x-fragment">
         uniform vec2 res;
         uniform sampler2D velocityField;
         uniform float dx;
@@ -196,7 +196,7 @@
 
         }
     </script>
-    <script id="VorticityConf" type="shader-code">
+    <script id="VorticityConf" type="x-shader/x-fragment">
         uniform vec2 res;
         uniform sampler2D velocityField;
         uniform sampler2D curlField;
@@ -233,7 +233,7 @@
             }
         }
     </script>
-    <script id="Boundary" type="shader-code">
+    <script id="Boundary" type="x-shader/x-fragment">
         uniform vec2 res;
         uniform sampler2D read;
         uniform float scale;
