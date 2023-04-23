@@ -36,54 +36,54 @@ var res = new THREE.Vector2(512, 256);
 var displaySettings = {
     Slab: "Density"
 };
-gui = new dat.GUI();
-gui.add(displaySettings, "Slab", [
-    "Density",
-    "Velocity",
-    "Temperature",
-    "Vorticity",
-    "Pressure",
-    "Divergence"
-]);
+// gui = new dat.GUI();
+// gui.add(displaySettings, "Slab", [
+//     "Density",
+//     // "Velocity",
+//     // "Temperature",
+//     // "Vorticity",
+//     // "Pressure",
+//     // "Divergence"
+// ]);
 
 var pressureSettings = {
     Iterations: 20
 };
-var pressureFolder = gui.addFolder("Pressure");
-    pressureFolder.add(pressureSettings, "Iterations", 0, 50, 1);
+// var pressureFolder = gui.addFolder("Pressure");
+//     pressureFolder.add(pressureSettings, "Iterations", 0, 50, 1);
 
 var tempSettings = {
     Smoke: 1.0
 };
-var tempFolder = gui.addFolder("Temperature");
-    tempFolder.add(tempSettings, "Smoke", -1.0, 2.0, 0.05);
+// var tempFolder = gui.addFolder("Temperature");
+//     tempFolder.add(tempSettings, "Smoke", -1.0, 2.0, 0.05);
 
 var vorticitySettings = {
     Curl: 0.2
 };
 
-var vorticityFolder = gui.addFolder("Vorticity");
-    vorticityFolder.add(vorticitySettings, "Curl", 0, 1.0, 0.05);
+// var vorticityFolder = gui.addFolder("Vorticity");
+//     vorticityFolder.add(vorticitySettings, "Curl", 0, 1.0, 0.05);
 
 var colorSettings = {
     Color: "Constant"
 };
-gui.add(colorSettings, "Color", [
-    "Constant",
-    "Cos-Function",
-    "Velocity-Based"
-]);
+// gui.add(colorSettings, "Color", [
+//     "Constant",
+//     // "Cos-Function",
+//     // "Velocity-Based"
+// ]);
 
 var radiusSettings = {
     Radius: 8.0
 };
 
-gui.add(radiusSettings, "Radius", 5.0, 20.0, 1.0);
+// gui.add(radiusSettings, "Radius", 5.0, 20.0, 1.0);
 
 var boundarySettings = {
     Boundaries: false
 };
-gui.add(boundarySettings, "Boundaries");
+// gui.add(boundarySettings, "Boundaries");
 
 function scene_setup(){
     scene = new THREE.Scene();
@@ -189,10 +189,18 @@ document.onmousedown = function(event){
 
 }
 document.onmouseup = function(event){
-    mouseDown = false;
-    externalVelocity.smokeSource.z = 0;
-    externalDensity.smokeSource.z = 0;
-    externalTemperature.smokeSource.z = 0;
+    // mouseDown = false;
+    // externalVelocity.smokeSource.z = 0;
+    // externalDensity.smokeSource.z = 0;
+    // externalTemperature.smokeSource.z = 0;
+    mouseDown = true;
+    timeStamp = Date.now();
+    lastX = event.clientX;
+    lastY = window.innerHeight - event.clientY;
+    externalVelocity.smokeSource.z = 1.0;
+    externalDensity.smokeSource.z = 1.0;
+
+    externalTemperature.smokeSource.z = tempSettings.Smoke;
 }
 
 
@@ -202,10 +210,10 @@ function render() {
   advect.compute(renderer, velocity.read, velocity.read, 1.0, velocity.write);
   velocity.swap();
 
-  advect.compute(renderer, velocity.read, density.read, 0.99, density.write);
+  advect.compute(renderer, velocity.read, density.read, 0.9, density.write);
   density.swap();
 
-  advect.compute(renderer, velocity.read, temperature.read, 0.99, temperature.write);
+  advect.compute(renderer, velocity.read, temperature.read, 0.9, temperature.write);
   temperature.swap();
 
   buoyancy.compute(renderer, velocity.read, temperature.read, density.read, 0.0, velocity.write);
@@ -224,8 +232,8 @@ function render() {
   //boundary.compute(renderer, velocity.read, velocity.write);
   //velocity.swap();
 
-  externalVelocity.compute(renderer, velocity.read, radiusSettings.Radius, velocity.write);
-  velocity.swap();
+//   externalVelocity.compute(renderer, velocity.read, radiusSettings.Radius, velocity.write);
+//   velocity.swap();
 
   //boundary.compute(renderer, velocity.read, velocity.write);
   //velocity.swap();
