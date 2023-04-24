@@ -36,54 +36,54 @@ var res = new THREE.Vector2(512, 256);
 var displaySettings = {
     Slab: "Density"
 };
-gui = new dat.GUI();
-gui.add(displaySettings, "Slab", [
-    "Density",
-    "Velocity",
-    "Temperature",
-    "Vorticity",
-    "Pressure",
-    "Divergence"
-]);
+// gui = new dat.GUI();
+// gui.add(displaySettings, "Slab", [
+//     "Density",
+//     // "Velocity",
+//     // "Temperature",
+//     // "Vorticity",
+//     // "Pressure",
+//     // "Divergence"
+// ]);
 
 var pressureSettings = {
     Iterations: 20
 };
-var pressureFolder = gui.addFolder("Pressure");
-    pressureFolder.add(pressureSettings, "Iterations", 0, 50, 1);
+// var pressureFolder = gui.addFolder("Pressure");
+//     pressureFolder.add(pressureSettings, "Iterations", 0, 50, 1);
 
 var tempSettings = {
     Smoke: 1.0
 };
-var tempFolder = gui.addFolder("Temperature");
-    tempFolder.add(tempSettings, "Smoke", -1.0, 2.0, 0.05);
+// var tempFolder = gui.addFolder("Temperature");
+//     tempFolder.add(tempSettings, "Smoke", -1.0, 2.0, 0.05);
 
 var vorticitySettings = {
     Curl: 0.2
 };
 
-var vorticityFolder = gui.addFolder("Vorticity");
-    vorticityFolder.add(vorticitySettings, "Curl", 0, 1.0, 0.05);
+// var vorticityFolder = gui.addFolder("Vorticity");
+//     vorticityFolder.add(vorticitySettings, "Curl", 0, 1.0, 0.05);
 
 var colorSettings = {
     Color: "Constant"
 };
-gui.add(colorSettings, "Color", [
-    "Constant",
-    "Cos-Function",
-    "Velocity-Based"
-]);
+// gui.add(colorSettings, "Color", [
+//     "Constant",
+//     // "Cos-Function",
+//     // "Velocity-Based"
+// ]);
 
 var radiusSettings = {
     Radius: 8.0
 };
 
-gui.add(radiusSettings, "Radius", 5.0, 20.0, 1.0);
+// gui.add(radiusSettings, "Radius", 5.0, 20.0, 1.0);
 
 var boundarySettings = {
     Boundaries: false
 };
-gui.add(boundarySettings, "Boundaries");
+// gui.add(boundarySettings, "Boundaries");
 
 function scene_setup(){
     scene = new THREE.Scene();
@@ -219,6 +219,7 @@ function render() {
   density.swap();
 
   advect.compute(renderer, velocity.read, temperature.read, 0.7, temperature.write);
+
   temperature.swap();
 
   buoyancy.compute(renderer, velocity.read, temperature.read, density.read, 0.0, velocity.write);
@@ -237,8 +238,8 @@ function render() {
   //boundary.compute(renderer, velocity.read, velocity.write);
   //velocity.swap();
 
-  externalVelocity.compute(renderer, velocity.read, radiusSettings.Radius, velocity.write);
-  velocity.swap();
+//   externalVelocity.compute(renderer, velocity.read, radiusSettings.Radius, velocity.write);
+//   velocity.swap();
 
   //boundary.compute(renderer, velocity.read, velocity.write);
   //velocity.swap();
