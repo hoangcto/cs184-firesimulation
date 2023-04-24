@@ -30,7 +30,7 @@ Buoyancy.prototype.compute = function(renderer, velocityField, temperatureField,
     this.uniforms.temperatureField.value = temperatureField;
     this.uniforms.densityField.value = densityField;
     this.uniforms.ambientTemperature.value = ambientTemperature;
-    this.uniforms.sigma.value = 0.08;
-    this.uniforms.kappa.value = 0.001;
+    this.uniforms.sigma.value = 0.8;
+    this.uniforms.kappa.value = 0.0;
     renderer.render(this.scene, this.camera, output, false);
 }

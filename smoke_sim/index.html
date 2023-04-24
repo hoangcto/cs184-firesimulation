@@ -56,7 +56,7 @@
         void main() {
             vec2 pixel = gl_FragCoord.xy / res.xy;
             float dist = distance(smokeSource.xy,gl_FragCoord.xy);
-            vec2 smoke = smokeSource.z * max(radius-dist,0.0) * sourceVelocity / res.xy;
+            vec2 smoke = smokeSource.z * max(radius-dist,0.0) * sourceVelocity / res.xy * 0.8;
             gl_FragColor = vec4(texture2D(bufferTexture, pixel).xy + smoke, 0.0, 1.0);
         }
     </script>
@@ -192,8 +192,6 @@
             float dudy = (texture2D(velocityField, ij + jstep).x - texture2D(velocityField, ij - jstep).x) / (2.0 * dy);
 
             gl_FragColor = vec4(dvdx - dudy, 0.0, 0.0, 1.0);
-
-
         }
     </script>
     <script id="VorticityConf" type="x-shader/x-fragment">

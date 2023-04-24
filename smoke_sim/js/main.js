@@ -162,8 +162,12 @@ function UpdateMousePosition(X,Y){
     externalTemperature.smokeSource.x = X * res.x / window.innerWidth;
     externalTemperature.smokeSource.y = Y * res.y / window.innerHeight;
 
-    externalVelocity.sourceVelocity.x = Math.round((X-lastX) / deltaTime * 100);
-    externalVelocity.sourceVelocity.y = Math.round((Y-lastY) / deltaTime * 100);
+    if (Math.abs(Math.round((X-lastX) > 2))) {
+        externalVelocity.sourceVelocity.x = Math.round((X-lastX) / deltaTime * 100);
+    }
+    if (Math.abs(Math.round((Y-lastY) > 2))) {
+        externalVelocity.sourceVelocity.y = Math.round((Y-lastY) / deltaTime * 100);
+    }
 
     timeStamp = currentTime;
     lastX = X;
@@ -189,23 +193,32 @@ document.onmousedown = function(event){
 
 }
 document.onmouseup = function(event){
-    mouseDown = false;
-    externalVelocity.smokeSource.z = 0;
-    externalDensity.smokeSource.z = 0;
-    externalTemperature.smokeSource.z = 0;
+    // mouseDown = false;
+    // externalVelocity.smokeSource.z = 0;
+    // externalDensity.smokeSource.z = 0;
+    // externalTemperature.smokeSource.z = 0;
+
+    mouseDown = true;
+    timeStamp = Date.now();
+    lastX = event.clientX;
+    lastY = window.innerHeight - event.clientY;
+    externalVelocity.smokeSource.z = 1.0;
+    externalDensity.smokeSource.z = 1.0;
+
+    externalTemperature.smokeSource.z = tempSettings.Smoke;
 }
 
 
 //Render everything!
 function render() {
 
-  advect.compute(renderer, velocity.read, velocity.read, 1.0, velocity.write);
+  advect.compute(renderer, velocity.read, velocity.read, 0.9, velocity.write);
   velocity.swap();
 
-  advect.compute(renderer, velocity.read, density.read, 0.99, density.write);
+  advect.compute(renderer, velocity.read, density.read, 0.8, density.write);
   density.swap();
 
-  advect.compute(renderer, velocity.read, temperature.read, 0.99, temperature.write);
+  advect.compute(renderer, velocity.read, temperature.read, 0.7, temperature.write);
   temperature.swap();
 
   buoyancy.compute(renderer, velocity.read, temperature.read, density.read, 0.0, velocity.write);
@@ -233,7 +246,7 @@ function render() {
   let currColor = colorSettings.Color;
 
   if (currColor == "Constant") {
-      color = [50,50,50];
+      color = [50, 50, 50];
       externalDensity.compute(renderer, density.read, color, radiusSettings.Radius, density.write);
   } else if (currColor == "Cos-Function") {
       externalDensity.compute(renderer, density.read, color, radiusSettings.Radius, density.write);
