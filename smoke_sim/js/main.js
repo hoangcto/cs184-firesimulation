@@ -75,7 +75,7 @@ var colorSettings = {
 // ]);
 
 var radiusSettings = {
-    Radius: 8.0
+    Radius: 20.0
 };
 
 // gui.add(radiusSettings, "Radius", 5.0, 20.0, 1.0);
@@ -157,6 +157,8 @@ function UpdateMousePosition(X,Y){
 
     externalVelocity.smokeSource.x = X * res.x / window.innerWidth;
     externalVelocity.smokeSource.y = Y * res.y / window.innerHeight;
+    // externalVelocity.smokeSource.x = X * res.x;
+    // externalVelocity.smokeSource.y = Y * res.y;
     externalDensity.smokeSource.x = X * res.x / window.innerWidth;
     externalDensity.smokeSource.y = Y * res.y / window.innerHeight;
     externalTemperature.smokeSource.x = X * res.x / window.innerWidth;
@@ -173,17 +175,21 @@ function UpdateMousePosition(X,Y){
       color = [Math.cos(timeStamp)* 150, Math.cos(timeStamp) * Math.sin(timeStamp) * 150, 0];
     }
 }
-document.onmousemove = function(event){
-    UpdateMousePosition(event.clientX, window.innerHeight - event.clientY)
-}
+// document.onmousemove = function(event){
+//     UpdateMousePosition(event.clientX, window.innerHeight - event.clientY)
+// }
 
 document.onmousedown = function(event){
     mouseDown = true;
     timeStamp = Date.now();
-    lastX = event.clientX;
-    lastY = window.innerHeight - event.clientY;
+    // lastX = window.innerWidth; 
+    // lastY = window.innerHeight; 
+    lastX = window.innerWidth/2;
+    lastY = window.innerHeight/2;
     externalVelocity.smokeSource.z = 1.0;
     externalDensity.smokeSource.z = 1.0;
+    externalDensity.smokeSource.x = lastX * res.x / window.innerWidth;
+    externalDensity.smokeSource.y = lastY * res.y / window.innerHeight;
 
     externalTemperature.smokeSource.z = tempSettings.Smoke;
 
@@ -193,10 +199,13 @@ document.onmouseup = function(event){
     // externalVelocity.smokeSource.z = 0;
     // externalDensity.smokeSource.z = 0;
     // externalTemperature.smokeSource.z = 0;
+
     mouseDown = true;
     timeStamp = Date.now();
-    lastX = event.clientX;
-    lastY = window.innerHeight - event.clientY;
+    // lastX = window.innerWidth; 
+    // lastY = window.innerHeight; 
+    lastX = window.innerWidth/2;
+    lastY = window.innerHeight/2;
     externalVelocity.smokeSource.z = 1.0;
     externalDensity.smokeSource.z = 1.0;
 
@@ -216,7 +225,7 @@ function render() {
   advect.compute(renderer, velocity.read, temperature.read, 0.9, temperature.write);
   temperature.swap();
 
-  buoyancy.compute(renderer, velocity.read, temperature.read, density.read, 0.0, velocity.write);
+  buoyancy.compute(renderer, velocity.read, temperature.read, density.read, 0.1, velocity.write);
   velocity.swap();
 
   if (boundarySettings.Boundaries) {
@@ -232,8 +241,8 @@ function render() {
   //boundary.compute(renderer, velocity.read, velocity.write);
   //velocity.swap();
 
-//   externalVelocity.compute(renderer, velocity.read, radiusSettings.Radius, velocity.write);
-//   velocity.swap();
+  externalVelocity.compute(renderer, velocity.read, radiusSettings.Radius, velocity.write);
+  velocity.swap();
 
   //boundary.compute(renderer, velocity.read, velocity.write);
   //velocity.swap();
