@@ -47,21 +47,22 @@ gui.add(displaySettings, "Slab", [
 ]);
 
 var pressureSettings = {
-    Iterations: 10
+  //default 40
+    Iterations: 40
 };
 // var pressureFolder = gui.addFolder("Pressure");
 //     pressureFolder.add(pressureSettings, "Iterations", 0, 50, 1);
 
 var tempSettings = {
-    //default 2
-    Smoke: 10.0
+    //default 4
+    Smoke: 4.0
 };
 // var tempFolder = gui.addFolder("Temperature");
 //     tempFolder.add(tempSettings, "Smoke", -1.0, 2.0, 0.05);
 
 var vorticitySettings = {
     //default .2
-    Curl: 0.6
+    Curl: 0.2
 };
 
 // var vorticityFolder = gui.addFolder("Vorticity");
@@ -70,15 +71,15 @@ var vorticitySettings = {
 var colorSettings = {
     Color: "Constant"
 };
-// gui.add(colorSettings, "Color", [
-//     "Constant",
-//     // "Cos-Function",
-//     // "Velocity-Based"
-// ]);
+gui.add(colorSettings, "Color", [
+    "Constant",
+    "Cos-Function",
+    "Velocity-Based"
+]);
 
 var radiusSettings = {
     //default 20 
-    Radius: 35.0
+    Radius: 20.0
 };
 
 // gui.add(radiusSettings, "Radius", 5.0, 20.0, 1.0);
@@ -112,6 +113,7 @@ function buffer_texture_setup(){
     advect = new Advect(res);
     externalVelocity = new ExternalVelocity(res);
     externalDensity = new ExternalDensity(res);
+    testSmoke = new ExternalDensity(res);
     externalTemperature = new ExternalTemperature(res);
     buoyancy = new Buoyancy(res);
     draw = new Draw(res);
@@ -165,6 +167,8 @@ function UpdateMousePosition(X,Y){
     externalVelocity.smokeSource.y = Y * res.y;
     externalDensity.smokeSource.x = X * res.x / window.innerWidth;
     externalDensity.smokeSource.y = Y * res.y / window.innerHeight;
+    testSmoke.smokeSource.x = X * res.x / window.innerWidth; 
+    testSmoke.smokeSource.y = Y * res.y / window.innerHeight;
     externalTemperature.smokeSource.x = X * res.x / window.innerWidth;
     externalTemperature.smokeSource.y = Y * res.y / window.innerHeight;
 
@@ -197,6 +201,9 @@ document.onmousedown = function(event){
     lastX = event.clientX; 
     lastY = window.innerHeight - event.clientY;
     externalVelocity.smokeSource.z = 1.0;
+    testSmoke.smokeSource.z = 1.0; 
+    testSmoke.smokeSource.x = lastX * res.x / window.innerWidth;
+    testSmoke.smokeSource.y = lastY * res.y / window.innerHeight;
     externalDensity.smokeSource.z = 1.0;
     externalDensity.smokeSource.x = lastX * res.x / window.innerWidth;
     externalDensity.smokeSource.y = lastY * res.y / window.innerHeight;
@@ -261,9 +268,14 @@ function render() {
   let currColor = colorSettings.Color;
 
   if (currColor == "Constant") {
+      // radiusSettings.Radius = 40; 
+      // color = [1.56, 2.88, 0];
       color = [30, 30, 30];
+      testSmoke.compute(renderer, density.read, [1.56, 2.88, 0], 40, density.write); 
       externalDensity.compute(renderer, density.read, color, radiusSettings.Radius, density.write);
   } else if (currColor == "Cos-Function") {
+      // radiusSettings.Radius = 40; 
+      color = [1.56, 2.88, 0];
       externalDensity.compute(renderer, density.read, color, radiusSettings.Radius, density.write);
   } else if (currColor == "Velocity-Based") {
       externalVelocity.compute(renderer, density.read, radiusSettings.Radius, density.write);
