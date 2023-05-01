@@ -7,7 +7,8 @@ ExternalTemperature = function(res) {
         res : {type: 'v2' },
         smokeSource: {type:"v3" },
         temp: {type: 'f'},
-        radius: {type: 'f'}
+        radius: {type: 'f'}, 
+        color: {type: "v3"}
     };
     var material = new THREE.ShaderMaterial({
         uniforms: this.uniforms,
@@ -33,11 +34,13 @@ ExternalTemperature = function(res) {
 // renderer.setSize( width, height );
 // externalTemperature.compute(renderer, temperature.read, 0.01, radiusSettings.Radius, temperature.write);
 
-ExternalTemperature.prototype.compute = function(renderer, input, temp, radius, output) {
+ExternalTemperature.prototype.compute = function(renderer, input, color, temp, radius, output) {
     this.uniforms.bufferTexture.value = input;
     this.uniforms.res.value = this.res;
     this.uniforms.temp.value = temp;
     this.uniforms.smokeSource.value = this.smokeSource;
     this.uniforms.radius.value = radius;
+    //set color to 50, 50, 50 
+    this.uniforms.color.value = new THREE.Vector3(color[0],color[1],color[2]);
     renderer.render(this.scene, this.camera, output, false);
 }

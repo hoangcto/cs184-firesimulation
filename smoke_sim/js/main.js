@@ -36,30 +36,32 @@ var res = new THREE.Vector2(512, 256);
 var displaySettings = {
     Slab: "Density"
 };
-// gui = new dat.GUI();
-// gui.add(displaySettings, "Slab", [
-//     "Density",
-//     // "Velocity",
-//     // "Temperature",
-//     // "Vorticity",
-//     // "Pressure",
-//     // "Divergence"
-// ]);
+gui = new dat.GUI();
+gui.add(displaySettings, "Slab", [
+    "Density",
+    "Velocity",
+    "Temperature",
+    "Vorticity",
+    "Pressure",
+    "Divergence"
+]);
 
 var pressureSettings = {
-    Iterations: 20
+    Iterations: 10
 };
 // var pressureFolder = gui.addFolder("Pressure");
 //     pressureFolder.add(pressureSettings, "Iterations", 0, 50, 1);
 
 var tempSettings = {
-    Smoke: 1.0
+    //default 2
+    Smoke: 10.0
 };
 // var tempFolder = gui.addFolder("Temperature");
 //     tempFolder.add(tempSettings, "Smoke", -1.0, 2.0, 0.05);
 
 var vorticitySettings = {
-    Curl: 0.2
+    //default .2
+    Curl: 0.6
 };
 
 // var vorticityFolder = gui.addFolder("Vorticity");
@@ -75,7 +77,8 @@ var colorSettings = {
 // ]);
 
 var radiusSettings = {
-    Radius: 20.0
+    //default 20 
+    Radius: 35.0
 };
 
 // gui.add(radiusSettings, "Radius", 5.0, 20.0, 1.0);
@@ -125,6 +128,7 @@ function buffer_texture_setup(){
     density = new Slab(res);
     temperature = new Slab(res);
     pressure = new Slab(res);
+    //why are there two temps
     temperature = new Slab(res);
     diverge = new Slab(res);
     vorticity = new Slab(res);
@@ -157,8 +161,8 @@ function UpdateMousePosition(X,Y){
 
     externalVelocity.smokeSource.x = X * res.x / window.innerWidth;
     externalVelocity.smokeSource.y = Y * res.y / window.innerHeight;
-    // externalVelocity.smokeSource.x = X * res.x;
-    // externalVelocity.smokeSource.y = Y * res.y;
+    externalVelocity.smokeSource.x = X * res.x;
+    externalVelocity.smokeSource.y = Y * res.y;
     externalDensity.smokeSource.x = X * res.x / window.innerWidth;
     externalDensity.smokeSource.y = Y * res.y / window.innerHeight;
     externalTemperature.smokeSource.x = X * res.x / window.innerWidth;
@@ -179,17 +183,19 @@ function UpdateMousePosition(X,Y){
       color = [Math.cos(timeStamp)* 150, Math.cos(timeStamp) * Math.sin(timeStamp) * 150, 0];
     }
 }
-// document.onmousemove = function(event){
-//     UpdateMousePosition(event.clientX, window.innerHeight - event.clientY)
-// }
+document.onmousemove = function(event){
+    UpdateMousePosition(event.clientX, window.innerHeight - event.clientY)
+}
 
 document.onmousedown = function(event){
     mouseDown = true;
     timeStamp = Date.now();
     // lastX = window.innerWidth; 
     // lastY = window.innerHeight; 
-    lastX = window.innerWidth/2;
-    lastY = window.innerHeight/2;
+    // lastX = window.innerWidth/2;
+    // lastY = window.innerHeight/2;
+    lastX = event.clientX; 
+    lastY = window.innerHeight - event.clientY;
     externalVelocity.smokeSource.z = 1.0;
     externalDensity.smokeSource.z = 1.0;
     externalDensity.smokeSource.x = lastX * res.x / window.innerWidth;
@@ -255,7 +261,7 @@ function render() {
   let currColor = colorSettings.Color;
 
   if (currColor == "Constant") {
-      color = [50, 50, 50];
+      color = [30, 30, 30];
       externalDensity.compute(renderer, density.read, color, radiusSettings.Radius, density.write);
   } else if (currColor == "Cos-Function") {
       externalDensity.compute(renderer, density.read, color, radiusSettings.Radius, density.write);
@@ -320,6 +326,7 @@ function render() {
   if (currSlab == "Density") {
       if (currColor == "Constant") {
         draw.setDisplay(new THREE.Vector3(0.0,0.0,0.0), new THREE.Vector3(1.0,0.2,0.8));
+        // draw.setDisplay(new THREE.Vector3(0.0,0.0,0.0), new THREE.Vector3(1.0,0.2,0.8));
       } else {
         draw.displayNeg();
       }
@@ -328,7 +335,9 @@ function render() {
       draw.displayNeg();
       read = velocity.read;
   } else if (currSlab == "Temperature") {
+      // draw.displayNeg();
       draw.setDisplay(new THREE.Vector3(0.5,0.5,0.5), new THREE.Vector3(1.0,1.0,1.0));
+    //   draw.setDisplay(new THREE.Vector3(0.5,0.5,0.5), new THREE.Vector3(1.0,1.0,1.0));
       read = temperature.read;
   } else if (currSlab == "Vorticity") {
       draw.displayNeg();
