@@ -244,13 +244,13 @@ function init() {
 
 
     var mtlLoader = new THREE.MTLLoader();
-    mtlLoader.setTexturePath('/obj/');
-    mtlLoader.setPath('/obj/');
+    mtlLoader.setTexturePath('/fire_sim/obj/');
+    mtlLoader.setPath('/fire_sim/obj/');
     mtlLoader.load('CandleStick2.mtl', function (materials) {
         materials.preload();
 
         var objLoader = new THREE.OBJLoader();
-        objLoader.setPath('/obj/');
+        objLoader.setPath('/fire_sim/obj/');
         objLoader.load('CandleStick2.obj', function (object) {
 
         scene.add(object);
