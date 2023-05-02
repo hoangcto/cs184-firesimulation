@@ -98,6 +98,35 @@ function scene_setup(){
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize( width, height );
     document.body.appendChild( renderer.domElement );
+
+    // var keyLight = new THREE.DirectionalLight(new THREE.Color('hsl(30, 100%, 75%)'), 1.0);
+    // keyLight.position.set(-100, 0, 100);
+
+    // var fillLight = new THREE.DirectionalLight(new THREE.Color('hsl(240, 100%, 75%)'), 0.75);
+    // fillLight.position.set(100, 0, 100);
+
+    // var backLight = new THREE.DirectionalLight(0xffffff, 1.0);
+    // backLight.position.set(100, 0, -100).normalize();
+    // scene.add(keyLight);
+    // scene.add(fillLight);
+    // scene.add(backLight);
+
+    var mtlLoader = new THREE.MTLLoader();
+    mtlLoader.setTexturePath('/smoke_sim/obj/');
+    mtlLoader.setPath('/smoke_sim/obj/');
+    mtlLoader.load('r2-d2.mtl', function (materials) {
+        materials.preload();
+
+        var objLoader = new THREE.OBJLoader();
+        objLoader.setPath('/smoke_sim/obj/');
+        objLoader.load('r2-d2.obj', function (object) {
+
+        //scene.add(object);
+        object.position.y -= 2;
+        });
+    });
+
+
 }
 
 function resize() {
