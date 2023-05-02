@@ -250,7 +250,7 @@ function init() {
         materials.preload();
 
         var objLoader = new THREE.OBJLoader();
-        objLoader.setPath('/fire_sim/obj/');
+        objLoader.setPath('obj/');
         objLoader.load('CandleStick2.obj', function (object) {
 
         scene.add(object);
