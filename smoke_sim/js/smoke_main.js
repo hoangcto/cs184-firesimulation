@@ -1,9 +1,6 @@
-// global variables
-var renderer;
 var scene;
 var camera;
-
-var control;
+var renderer;
 
 //slabs
 var velocity;
@@ -39,51 +36,105 @@ var res = new THREE.Vector2(512, 256);
 var displaySettings = {
     Slab: "Density"
 };
-
 gui = new dat.GUI();
-// gui.add(displaySettings, "Slab", [
-//     "Density",
-//     "Velocity",
-//     "Temperature",
-//     "Vorticity",
-//     "Pressure",
-//     "Divergence"
-// ]);
+gui.add(displaySettings, "Slab", [
+    "Density",
+    "Velocity",
+    "Temperature",
+    "Vorticity",
+    "Pressure",
+    "Divergence"
+]);
 
 var pressureSettings = {
-      Iterations: 40
-  };
-  var pressureFolder = gui.addFolder("Pressure");
-      pressureFolder.add(pressureSettings, "Iterations", 10, 50);
-  
-  var tempSettings = {
-      Flame: 4.0
-  };
-  var tempFolder = gui.addFolder("Temperature");
-      tempFolder.add(tempSettings, "Flame", 0, 4.0);
-  
-  var vorticitySettings = {
-      Curl: 0.2
-  };
-  
-  var vorticityFolder = gui.addFolder("Vorticity");
-      vorticityFolder.add(vorticitySettings, "Curl", 0, 0.5);
-  
+  //default 40
+    Iterations: 40
+};
+// var pressureFolder = gui.addFolder("Pressure");
+//     pressureFolder.add(pressureSettings, "Iterations", 0, 50, 1);
+
+var tempSettings = {
+    //default 4
+    Smoke: 4.0
+};
+// var tempFolder = gui.addFolder("Temperature");
+//     tempFolder.add(tempSettings, "Smoke", -1.0, 2.0, 0.05);
+
+var vorticitySettings = {
+    //default .2
+    Curl: 0.2
+};
+
+// var vorticityFolder = gui.addFolder("Vorticity");
+//     vorticityFolder.add(vorticitySettings, "Curl", 0, 1.0, 0.05);
 
 var colorSettings = {
     Color: "Constant"
 };
+gui.add(colorSettings, "Color", [
+    "Constant",
+    "Cos-Function",
+    "Velocity-Based"
+]);
 
 var radiusSettings = {
+    //default 20 
     Radius: 20.0
 };
 
-var radiusFolder = gui.addFolder("Radius");
-      radiusFolder.add(radiusSettings, "Radius", 0, 25);
+// gui.add(radiusSettings, "Radius", 5.0, 20.0, 1.0);
 
 var boundarySettings = {
     Boundaries: false
 };
+// gui.add(boundarySettings, "Boundaries");
+
+function scene_setup(){
+    scene = new THREE.Scene();
+    width = window.innerWidth;
+    height = window.innerHeight;
+    camera = new THREE.OrthographicCamera( -1, 1, 1, -1, 0, 1 );
+    renderer = new THREE.WebGLRenderer();
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize( width, height );
+    document.body.appendChild( renderer.domElement );
+
+    var keyLight = new THREE.DirectionalLight(new THREE.Color('hsl(30, 100%, 75%)'), 1.0);
+    keyLight.position.set(-0.5, 0, 0.5);
+
+    var fillLight = new THREE.DirectionalLight(new THREE.Color('hsl(240, 100%, 75%)'), 0.75);
+    fillLight.position.set(0.5, 0, 0.5);
+
+    var backLight = new THREE.DirectionalLight(0xffffff, 1.0);
+    backLight.position.set(0.5, 0, -0.5);
+    scene.add(keyLight);
+    scene.add(fillLight);
+    scene.add(backLight);
+
+    var mtlLoader = new THREE.MTLLoader();
+    mtlLoader.setTexturePath('/smoke_sim/obj/');
+    mtlLoader.setPath('/smoke_sim/obj/');
+    mtlLoader.load('CandleStick2.mtl', function (materials) {
+        materials.preload();
+
+        var objLoader = new THREE.OBJLoader();
+        objLoader.setPath('/smoke_sim/obj/');
+        objLoader.load('CandleStick2.obj', function (object) {
+
+        scene.add(object);
+        object.position.set(0, -0.4, 0);
+        });
+    });
+
+
+}
+
+function resize() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    renderer.setSize(width, height);
+}
+window.onresize = resize;
 
 
 function buffer_texture_setup(){
@@ -122,6 +173,12 @@ function buffer_texture_setup(){
     quad = new THREE.Mesh( plane, finalMaterial );
     scene.add(quad);
 }
+
+//Initialize the Threejs scene
+scene_setup();
+
+//Setup the frame buffer/texture we're going to be rendering to instead of the screen
+buffer_texture_setup();
 
 //Send position of smoke source with value
 var mouseDown = false;
@@ -162,133 +219,52 @@ function UpdateMousePosition(X,Y){
     }
 }
 document.onmousemove = function(event){
+    //UpdateMousePosition(event.clientX, window.innerHeight - event.clientY)
     UpdateMousePosition(window.innerWidth/2, window.innerHeight/2);
 }
 
+// document.onmousedown = function(event){
+//     mouseDown = true;
+//     timeStamp = Date.now();
+//     // lastX = window.innerWidth; 
+//     // lastY = window.innerHeight; 
+//     // lastX = window.innerWidth/2;
+//     // lastY = window.innerHeight/2;
+//     lastX = event.clientX; 
+//     lastY = window.innerHeight - event.clientY;
+//     externalVelocity.smokeSource.z = 1.0;
+//     testSmoke.smokeSource.z = 1.0; 
+//     testSmoke.smokeSource.x = lastX * res.x / window.innerWidth;
+//     testSmoke.smokeSource.y = lastY * res.y / window.innerHeight;
+//     externalDensity.smokeSource.z = 1.0;
+//     externalDensity.smokeSource.x = lastX * res.x / window.innerWidth;
+//     externalDensity.smokeSource.y = lastY * res.y / window.innerHeight;
+
+//     externalTemperature.smokeSource.z = tempSettings.Smoke;
+
+// }
 document.onmouseup = function(event){
+    // mouseDown = false;
+    // externalVelocity.smokeSource.z = 0;
+    // externalDensity.smokeSource.z = 0;
+    // externalTemperature.smokeSource.z = 0;
+
     mouseDown = true;
     timeStamp = Date.now();
+    // lastX = window.innerWidth; 
+    // lastY = window.innerHeight; 
     lastX = window.innerWidth/2;
     lastY = window.innerHeight/2;
     externalVelocity.smokeSource.z = 1.0;
     externalDensity.smokeSource.z = 1.0;
 
-    externalTemperature.smokeSource.z = tempSettings.Flame;
-}
-
-function init() {
-
-    // create a scene, that will hold all our elements such as objects, cameras and lights.
-    scene = new THREE.Scene();
-
-    //add fire texture
-    buffer_texture_setup();
-
-    // create a camera, which defines where we're looking at.
-    // camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera = new THREE.OrthographicCamera( -1, 1, 1, -1, 0, 1 );
-
-    camera.updateProjectionMatrix();
-
-    // create a render, sets the background color and the size
-    renderer = new THREE.WebGLRenderer();
-    renderer.setClearColor(0x000000, 1.0);
-    renderer.setSize(window.innerWidth, window.innerHeight);
-
-
-    // position and point the camera to the center of the scene
-    camera.position.x = -0.5;
-    camera.position.y = 0.2;
-    camera.position.z = 0.3;
-    camera.lookAt(scene.position);
-
-    var dirLight = new THREE.DirectionalLight(new THREE.Color('hsl(30, 100%, 75%)'), 1.0);
-    scene.add(dirLight);
-    dirLight.position.set(-0.5, 0.0, 0.5);
-
-    var fillLight = new THREE.DirectionalLight(new THREE.Color('hsl(240, 100%, 75%)'), 0.75);
-    scene.add(fillLight);
-    fillLight.position.set(.5, 0, .5);
-    
-    var backLight = new THREE.DirectionalLight(0xffffff, 1.0);
-    scene.add(backLight);
-    backLight.position.set(.5, 0, -.5);
-
-    // add the output of the renderer to the html element
-    document.body.appendChild(renderer.domElement);
-
-
-
-
-    control = new function () {
-        this.left = camera.left;
-        this.right = camera.right;
-        this.top = camera.top;
-        this.bottom = camera.bottom;
-        // this.far = camera.far;
-        // this.near = camera.near;
-
-        this.updateCamera = function () {
-            camera.left = control.left;
-            camera.right = control.right;
-            camera.top = control.top;
-            camera.bottom = control.bottom;
-            // camera.far = control.far;
-            // camera.near = control.near;
-
-            camera.updateProjectionMatrix();
-        };
-    };
-
-    addControls(control);
-
-
-    var mtlLoader = new THREE.MTLLoader();
-    mtlLoader.setTexturePath('/obj/');
-    mtlLoader.setPath('/obj/');
-    mtlLoader.load('CandleStick2.mtl', function (materials) {
-        materials.preload();
-
-        var objLoader = new THREE.OBJLoader();
-        objLoader.setPath('/obj/');
-        objLoader.load('CandleStick2.obj', function (object) {
-
-        scene.add(object);
-        object.position.set(0, -0.4, 0);
-        });
-    });
-
-    // call the render function
-    render();
-}
-
-function addCube(x, y) {
-    // create a cube and add to scene
-    var cubeGeometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
-    var cubeMaterial = new THREE.MeshLambertMaterial();
-    cubeMaterial.color = new THREE.Color(0xffffff * Math.random())
-    cubeMaterial.transparent = true;
-    var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-    cube.name = 'cube';
-    cube.position.x = 0.1 * x - .5;
-    cube.position.y = 0;
-    cube.position.z = 0.1 * y - .5;
-    scene.add(cube);
-
+    externalTemperature.smokeSource.z = tempSettings.Smoke;
 }
 
 
-function addControls(controlObject) {
-    var gui = new dat.GUI();
-    gui.add(controlObject, 'left', -1, 0).onChange(controlObject.updateCamera);
-    gui.add(controlObject, 'right', 0, 1).onChange(controlObject.updateCamera);
-    gui.add(controlObject, 'top', 0, 1).onChange(controlObject.updateCamera);
-    gui.add(controlObject, 'bottom', -1, 0).onChange(controlObject.updateCamera);
-    // gui.add(controlObject, 'far', 0, 1).onChange(controlObject.updateCamera);
-    // gui.add(controlObject, 'near', 0, 1).onChange(controlObject.updateCamera);
-}
-
+//Render everything!
 function render() {
+
   advect.compute(renderer, velocity.read, velocity.read, 0.9, velocity.write);
   velocity.swap();
 
@@ -311,16 +287,26 @@ function render() {
     velocity.swap();
   }
 
+
+  //boundary.compute(renderer, velocity.read, velocity.write);
+  //velocity.swap();
+
   externalVelocity.compute(renderer, velocity.read, radiusSettings.Radius, velocity.write);
   velocity.swap();
+
+  //boundary.compute(renderer, velocity.read, velocity.write);
+  //velocity.swap();
 
   let currColor = colorSettings.Color;
 
   if (currColor == "Constant") {
+      // radiusSettings.Radius = 40; 
+      // color = [1.56, 2.88, 0];
       color = [30, 30, 30];
       testSmoke.compute(renderer, density.read, [1.56, 2.88, 0], 40, density.write); 
       externalDensity.compute(renderer, density.read, color, radiusSettings.Radius, density.write);
   } else if (currColor == "Cos-Function") {
+      // radiusSettings.Radius = 40; 
       color = [1.56, 2.88, 0];
       externalDensity.compute(renderer, density.read, color, radiusSettings.Radius, density.write);
   } else if (currColor == "Velocity-Based") {
@@ -384,6 +370,7 @@ function render() {
   if (currSlab == "Density") {
       if (currColor == "Constant") {
         draw.setDisplay(new THREE.Vector3(0.0,0.0,0.0), new THREE.Vector3(1.0,0.2,0.8));
+        // draw.setDisplay(new THREE.Vector3(0.0,0.0,0.0), new THREE.Vector3(1.0,0.2,0.8));
       } else {
         draw.displayNeg();
       }
@@ -392,7 +379,9 @@ function render() {
       draw.displayNeg();
       read = velocity.read;
   } else if (currSlab == "Temperature") {
+      // draw.displayNeg();
       draw.setDisplay(new THREE.Vector3(0.5,0.5,0.5), new THREE.Vector3(1.0,1.0,1.0));
+    //   draw.setDisplay(new THREE.Vector3(0.5,0.5,0.5), new THREE.Vector3(1.0,1.0,1.0));
       read = temperature.read;
   } else if (currSlab == "Vorticity") {
       draw.displayNeg();
@@ -410,7 +399,6 @@ function render() {
   renderer.render( scene, camera );
 
   requestAnimationFrame( render );
-}
 
-// calls the init function when the window is done loading.
-window.onload = init;
+}
+render();
