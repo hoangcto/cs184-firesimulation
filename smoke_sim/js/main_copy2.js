@@ -28,12 +28,23 @@ function init() {
     camera.position.z = 0.3;
     camera.lookAt(scene.position);
 
-    var dirLight = new THREE.DirectionalLight();
+    var dirLight = new THREE.DirectionalLight(new THREE.Color('hsl(30, 100%, 75%)'), 1.0);
     scene.add(dirLight);
-    dirLight.position.set(-0.5, 0.2, 0.3);
+    dirLight.position.set(-0.5, 0.0, 0.5);
+
+    var fillLight = new THREE.DirectionalLight(new THREE.Color('hsl(240, 100%, 75%)'), 0.75);
+    scene.add(fillLight);
+    fillLight.position.set(.5, 0, .5);
+    
+    var backLight = new THREE.DirectionalLight(0xffffff, 1.0);
+    scene.add(backLight);
+    backLight.position.set(.5, 0, -.5);
 
     // add the output of the renderer to the html element
     document.body.appendChild(renderer.domElement);
+
+
+
 
     control = new function () {
         this.left = camera.left;
@@ -57,12 +68,21 @@ function init() {
 
     addControls(control);
 
-    for (var x = 0; x < 10; x++) {
-        for (var y = 0; y < 10; y++) {
-            addCube(x, y);
-        }
-    }
 
+    var mtlLoader = new THREE.MTLLoader();
+    mtlLoader.setTexturePath('/smoke_sim/obj/');
+    mtlLoader.setPath('/smoke_sim/obj/');
+    mtlLoader.load('CandleStick2.mtl', function (materials) {
+        materials.preload();
+
+        var objLoader = new THREE.OBJLoader();
+        objLoader.setPath('/smoke_sim/obj/');
+        objLoader.load('CandleStick2.obj', function (object) {
+
+        scene.add(object);
+        object.position.set(0, -0.4, 0);
+        });
+    });
 
     // call the render function
     render();

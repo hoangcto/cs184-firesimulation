@@ -28,18 +28,17 @@ scene.add(backLight);
 var mtlLoader = new THREE.MTLLoader();
 mtlLoader.setTexturePath('/smoke_sim/obj/');
 mtlLoader.setPath('/smoke_sim/obj/');
-mtlLoader.load('CandleStick.mtl', function (materials) {
+mtlLoader.load('CandleStick2.mtl', function (materials) {
 
     materials.preload();
 
     var objLoader = new THREE.OBJLoader();
     objLoader.setMaterials(materials);
     objLoader.setPath('/smoke_sim/obj/');
-    objLoader.load('CandleStick.obj', function (object) {
+    objLoader.load('CandleStick2.obj', function (object) {
 
         scene.add(object);
-        object.position.y -= 3;
-    });
+        object.position.set(0, -0.4, 0);
 
 });
 

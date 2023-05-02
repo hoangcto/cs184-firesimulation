@@ -99,30 +99,30 @@ function scene_setup(){
     renderer.setSize( width, height );
     document.body.appendChild( renderer.domElement );
 
-    // var keyLight = new THREE.DirectionalLight(new THREE.Color('hsl(30, 100%, 75%)'), 1.0);
-    // keyLight.position.set(-100, 0, 100);
+    var keyLight = new THREE.DirectionalLight(new THREE.Color('hsl(30, 100%, 75%)'), 1.0);
+    keyLight.position.set(-0.5, 0, 0.5);
 
-    // var fillLight = new THREE.DirectionalLight(new THREE.Color('hsl(240, 100%, 75%)'), 0.75);
-    // fillLight.position.set(100, 0, 100);
+    var fillLight = new THREE.DirectionalLight(new THREE.Color('hsl(240, 100%, 75%)'), 0.75);
+    fillLight.position.set(0.5, 0, 0.5);
 
-    // var backLight = new THREE.DirectionalLight(0xffffff, 1.0);
-    // backLight.position.set(100, 0, -100).normalize();
-    // scene.add(keyLight);
-    // scene.add(fillLight);
-    // scene.add(backLight);
+    var backLight = new THREE.DirectionalLight(0xffffff, 1.0);
+    backLight.position.set(0.5, 0, -0.5);
+    scene.add(keyLight);
+    scene.add(fillLight);
+    scene.add(backLight);
 
     var mtlLoader = new THREE.MTLLoader();
     mtlLoader.setTexturePath('/smoke_sim/obj/');
     mtlLoader.setPath('/smoke_sim/obj/');
-    mtlLoader.load('r2-d2.mtl', function (materials) {
+    mtlLoader.load('CandleStick2.mtl', function (materials) {
         materials.preload();
 
         var objLoader = new THREE.OBJLoader();
         objLoader.setPath('/smoke_sim/obj/');
-        objLoader.load('r2-d2.obj', function (object) {
+        objLoader.load('CandleStick2.obj', function (object) {
 
-        //scene.add(object);
-        object.position.y -= 2;
+        scene.add(object);
+        object.position.set(0, -0.4, 0);
         });
     });
 
@@ -186,6 +186,8 @@ var timeStamp = null;
 var lastX = null;
 var lastY = null;
 function UpdateMousePosition(X,Y){
+    console.log(X);
+    console.log();
     var currentTime = Date.now();
     var deltaTime = currentTime - timeStamp;
 
@@ -217,29 +219,30 @@ function UpdateMousePosition(X,Y){
     }
 }
 document.onmousemove = function(event){
-    UpdateMousePosition(event.clientX, window.innerHeight - event.clientY)
+    //UpdateMousePosition(event.clientX, window.innerHeight - event.clientY)
+    UpdateMousePosition(window.innerWidth/2, window.innerHeight/2);
 }
 
-document.onmousedown = function(event){
-    mouseDown = true;
-    timeStamp = Date.now();
-    // lastX = window.innerWidth; 
-    // lastY = window.innerHeight; 
-    // lastX = window.innerWidth/2;
-    // lastY = window.innerHeight/2;
-    lastX = event.clientX; 
-    lastY = window.innerHeight - event.clientY;
-    externalVelocity.smokeSource.z = 1.0;
-    testSmoke.smokeSource.z = 1.0; 
-    testSmoke.smokeSource.x = lastX * res.x / window.innerWidth;
-    testSmoke.smokeSource.y = lastY * res.y / window.innerHeight;
-    externalDensity.smokeSource.z = 1.0;
-    externalDensity.smokeSource.x = lastX * res.x / window.innerWidth;
-    externalDensity.smokeSource.y = lastY * res.y / window.innerHeight;
+// document.onmousedown = function(event){
+//     mouseDown = true;
+//     timeStamp = Date.now();
+//     // lastX = window.innerWidth; 
+//     // lastY = window.innerHeight; 
+//     // lastX = window.innerWidth/2;
+//     // lastY = window.innerHeight/2;
+//     lastX = event.clientX; 
+//     lastY = window.innerHeight - event.clientY;
+//     externalVelocity.smokeSource.z = 1.0;
+//     testSmoke.smokeSource.z = 1.0; 
+//     testSmoke.smokeSource.x = lastX * res.x / window.innerWidth;
+//     testSmoke.smokeSource.y = lastY * res.y / window.innerHeight;
+//     externalDensity.smokeSource.z = 1.0;
+//     externalDensity.smokeSource.x = lastX * res.x / window.innerWidth;
+//     externalDensity.smokeSource.y = lastY * res.y / window.innerHeight;
 
-    externalTemperature.smokeSource.z = tempSettings.Smoke;
+//     externalTemperature.smokeSource.z = tempSettings.Smoke;
 
-}
+// }
 document.onmouseup = function(event){
     // mouseDown = false;
     // externalVelocity.smokeSource.z = 0;
