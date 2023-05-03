@@ -246,7 +246,7 @@ function init() {
     cameraFolder.add(control, 'bottom', -1, 0).onChange(control.updateCamera);
 
 
-    //addControls(control); 
+    //addControls(control);
 
 
     var mtlLoader = new THREE.MTLLoader();
