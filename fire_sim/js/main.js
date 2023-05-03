@@ -239,8 +239,14 @@ function init() {
             camera.updateProjectionMatrix();
         };
     };
+    var cameraFolder = gui.addFolder('Camera');
+    cameraFolder.add(control, 'left', -1, 0).onChange(control.updateCamera);
+    cameraFolder.add(control, 'right', 0, 1).onChange(control.updateCamera);
+    cameraFolder.add(control, 'top', 0, 1).onChange(control.updateCamera);
+    cameraFolder.add(control, 'bottom', -1, 0).onChange(control.updateCamera);
 
-    addControls(control);
+
+    //addControls(control); 
 
 
     var mtlLoader = new THREE.MTLLoader();
@@ -280,10 +286,11 @@ function addCube(x, y) {
 
 function addControls(controlObject) {
     var gui = new dat.GUI();
-    gui.add(controlObject, 'left', -1, 0).onChange(controlObject.updateCamera);
-    gui.add(controlObject, 'right', 0, 1).onChange(controlObject.updateCamera);
-    gui.add(controlObject, 'top', 0, 1).onChange(controlObject.updateCamera);
-    gui.add(controlObject, 'bottom', -1, 0).onChange(controlObject.updateCamera);
+    const cameraFolder = gui.addFolder('Camera')
+    cameraFolder.add(controlObject, 'left', -1, 0).onChange(controlObject.updateCamera);
+    cameraFolder.add(controlObject, 'right', 0, 1).onChange(controlObject.updateCamera);
+    cameraFolder.add(controlObject, 'top', 0, 1).onChange(controlObject.updateCamera);
+    cameraFolder.add(controlObject, 'bottom', -1, 0).onChange(controlObject.updateCamera);
     // gui.add(controlObject, 'far', 0, 1).onChange(controlObject.updateCamera);
     // gui.add(controlObject, 'near', 0, 1).onChange(controlObject.updateCamera);
 }
