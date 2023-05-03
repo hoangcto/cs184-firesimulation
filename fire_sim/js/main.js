@@ -50,25 +50,29 @@ gui = new dat.GUI();
 //     "Divergence"
 // ]);
 
+var instruction = gui.addFolder("CLICK TO START FIRE");
+    
+
+
 var pressureSettings = {
       Iterations: 40
   };
-  var pressureFolder = gui.addFolder("Pressure");
-      pressureFolder.add(pressureSettings, "Iterations", 10, 50);
-  
-  var tempSettings = {
-      Flame: 4.0
-  };
-  var tempFolder = gui.addFolder("Temperature");
-      tempFolder.add(tempSettings, "Flame", 0, 4.0);
-  
-  var vorticitySettings = {
-      Curl: 0.2
-  };
-  
-  var vorticityFolder = gui.addFolder("Vorticity");
-      vorticityFolder.add(vorticitySettings, "Curl", 0, 0.5);
-  
+var pressureFolder = gui.addFolder("Pressure");
+    pressureFolder.add(pressureSettings, "Iterations", 10, 50);
+
+var tempSettings = {
+    Flame: 4.0
+};
+var tempFolder = gui.addFolder("Temperature");
+    tempFolder.add(tempSettings, "Flame", 0, 4.0);
+
+var vorticitySettings = {
+    Curl: 0.2
+};
+
+var vorticityFolder = gui.addFolder("Vorticity");
+    vorticityFolder.add(vorticitySettings, "Curl", 0, 0.5);
+
 
 var colorSettings = {
     Color: "Constant"
