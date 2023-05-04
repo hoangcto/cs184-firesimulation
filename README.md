@@ -22,7 +22,7 @@ Paper
 
 In this project we simulate fire. Below is our paper:  
   
-[Paper](pdf/CS284_184_Final_Project_Milestone.pdf)
+[Paper](pdf/CS284_184_Final.pdf)
 
 Video
 -----
