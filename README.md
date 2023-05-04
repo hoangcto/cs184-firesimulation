@@ -15,7 +15,7 @@ Demo
 
 Here is a demo of our project! Feel free to click the link and play around with our digitally made candle :D.  
   
-[Demo](fire_sim/index.html)
+[Demo](https://hoangcto.github.io/cs184-firesimulation/fire_sim/index.html)
 
 Paper
 -----
