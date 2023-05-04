@@ -76,14 +76,14 @@ var vorticityFolder = gui.addFolder("Vorticity");
 
 var colorSettings = {
     Color: "Constant",
-    UserColor: [30, 30, 0]
+    UserColor: [45, 65, 0]
 };
 
 var colorFolder = gui.addFolder("Color");
 colorFolder.addColor(colorSettings, "UserColor");
 
 var radiusSettings = {
-    Radius: 20.0
+    Radius: 18.0
 };
 
 var radiusFolder = gui.addFolder("Radius");
