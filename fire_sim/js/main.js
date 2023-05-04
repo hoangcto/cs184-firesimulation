@@ -75,8 +75,12 @@ var vorticityFolder = gui.addFolder("Vorticity");
 
 
 var colorSettings = {
-    Color: "Constant"
+    Color: "Constant",
+    UserColor: [30, 30, 0]
 };
+
+var colorFolder = gui.addFolder("Color");
+colorFolder.addColor(colorSettings, "UserColor");
 
 var radiusSettings = {
     Radius: 20.0
@@ -328,9 +332,7 @@ function render() {
   let currColor = colorSettings.Color;
 
   if (currColor == "Constant") {
-      color = [30, 30, 30];
-      testSmoke.compute(renderer, density.read, [1.56, 2.88, 0], 40, density.write); 
-      externalDensity.compute(renderer, density.read, color, radiusSettings.Radius, density.write);
+      externalDensity.compute(renderer, density.read, colorSettings.UserColor, radiusSettings.Radius, density.write);
   } else if (currColor == "Cos-Function") {
       color = [1.56, 2.88, 0];
       externalDensity.compute(renderer, density.read, color, radiusSettings.Radius, density.write);
