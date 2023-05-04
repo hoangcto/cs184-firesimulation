@@ -58,7 +58,7 @@ var pressureSettings = {
       Iterations: 40
   };
 var pressureFolder = gui.addFolder("Pressure");
-    pressureFolder.add(pressureSettings, "Iterations", 10, 50);
+    pressureFolder.add(pressureSettings, "Iterations", 0, 100);
 
 var tempSettings = {
     Flame: 4.0
@@ -71,7 +71,7 @@ var vorticitySettings = {
 };
 
 var vorticityFolder = gui.addFolder("Vorticity");
-    vorticityFolder.add(vorticitySettings, "Curl", 0, 0.5);
+    vorticityFolder.add(vorticitySettings, "Curl", 0, 2.5);
 
 
 var colorSettings = {
