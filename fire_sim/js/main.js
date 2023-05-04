@@ -233,16 +233,16 @@ function init() {
         this.right = camera.right;
         this.top = camera.top;
         this.bottom = camera.bottom;
-        // this.far = camera.far;
-        // this.near = camera.near;
+        this.far = camera.far;
+        this.near = camera.near;
 
         this.updateCamera = function () {
             camera.left = control.left;
             camera.right = control.right;
             camera.top = control.top;
             camera.bottom = control.bottom;
-            // camera.far = control.far;
-            // camera.near = control.near;
+            camera.far = control.far;
+            camera.near = control.near;
 
             camera.updateProjectionMatrix();
         };
@@ -252,6 +252,8 @@ function init() {
     cameraFolder.add(control, 'right', 0, 1).onChange(control.updateCamera);
     cameraFolder.add(control, 'top', 0, 1).onChange(control.updateCamera);
     cameraFolder.add(control, 'bottom', -1, 0).onChange(control.updateCamera);
+    //cameraFolder.add(control, 'far', 0, 1).onChange(control.updateCamera);
+    //cameraFolder.add(control, 'near', 0, 1).onChange(control.updateCamera);
 
 
     //addControls(control);
@@ -299,8 +301,8 @@ function addControls(controlObject) {
     cameraFolder.add(controlObject, 'right', 0, 1).onChange(controlObject.updateCamera);
     cameraFolder.add(controlObject, 'top', 0, 1).onChange(controlObject.updateCamera);
     cameraFolder.add(controlObject, 'bottom', -1, 0).onChange(controlObject.updateCamera);
-    // gui.add(controlObject, 'far', 0, 1).onChange(controlObject.updateCamera);
-    // gui.add(controlObject, 'near', 0, 1).onChange(controlObject.updateCamera);
+    gui.add(controlObject, 'far', 0, 1).onChange(controlObject.updateCamera);
+    gui.add(controlObject, 'near', 0, 1).onChange(controlObject.updateCamera);
 }
 
 function render() {
